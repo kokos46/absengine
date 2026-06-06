@@ -18,6 +18,7 @@ class Player : public Entity {
 public:
     Player(Rectangle collision, float moveSpeed, float jumpForce, float gravity);
     void Movement(SceneManager& sceneManager, float dt);
+    void ResetVelocity();
 };
 
 
