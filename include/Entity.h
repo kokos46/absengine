@@ -16,6 +16,8 @@ public:
     void SetCollisionBox(Rectangle collisionBox);
     void SetTexture(Texture2D texture);
     Rectangle GetCollisionBox() const;
+    void SetPosition(Vector2 position);
+    Vector2 GetPosition();
 
 };
 

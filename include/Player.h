@@ -4,9 +4,19 @@
 
 #ifndef ABSENGINE_PLAYER_H
 #define ABSENGINE_PLAYER_H
+#include "Entity.h"
+#include "SceneManager.h"
 
 
-class Player {
+class Player : public Entity {
+    float moveSpeed;
+    float jumpForce;
+    float gravity;
+
+    float velocityY = 0.0f;
+public:
+    Player(Rectangle collision, float moveSpeed, float jumpForce, float gravity);
+    void Movement(SceneManager& sceneManager, float dt);
 };
 
 

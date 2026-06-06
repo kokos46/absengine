@@ -29,3 +29,11 @@ Entity::Entity(Rectangle rect): collisionBox(rect), position({rect.x, rect.y}) {
 }
 
 Rectangle Entity::GetCollisionBox() const { return collisionBox; }
+
+void Entity::SetPosition(Vector2 position) {
+    this->position = position;
+}
+
+Vector2 Entity::GetPosition() {
+    return position;
+}

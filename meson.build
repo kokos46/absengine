@@ -11,7 +11,8 @@ src = [
     'src/main.cpp',
     'src/scenes/Scene.cpp',
     'src/scenes/SceneManager.cpp',
-    'src/entities/Entity.cpp'
+    'src/entities/Entity.cpp',
+    'src/entities/Player.cpp'
 ]
 
 # Исполняемый файл
