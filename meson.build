@@ -10,7 +10,8 @@ raylib_dep = dependency('raylib', required : true)
 src = [
     'src/main.cpp',
     'src/scenes/Scene.cpp',
-    'src/scenes/SceneManager.cpp'
+    'src/scenes/SceneManager.cpp',
+    'src/entities/Entity.cpp'
 ]
 
 # Исполняемый файл

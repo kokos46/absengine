@@ -2,16 +2,17 @@
 #include <vector>
 #include "include/SceneManager.h"
 
-std::vector<Rectangle> platforms1 = {
-    { 0, 400, 800, 50 },    // Пол
-    { 200, 300, 200, 20 },  // Платформа 1
-    { 500, 200, 200, 20 },  // Платформа 2
-    { 100, 150, 150, 20 }   // Платформа 3
+
+std::vector<Entity> testScene1Platforms = {
+    Entity({ 0, 400, 800, 50 }),
+    Entity({ 200, 300, 200, 20 }),
+    Entity({ 500, 200, 200, 20 }),
+    Entity({ 100, 150, 150, 20 })
 };
 
-std::vector<Rectangle> platforms2 = {
-    { 0, 400, 800, 50 },
-    { 200, 300, 200, 20 },
+std::vector<Entity> testScene2Platforms = {
+    Entity({ 0, 400, 800, 50 }),
+    Entity({ 200, 300, 200, 20 })
 };
 
 const int FPS = 30;
@@ -22,9 +23,9 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Raylib Platformer - Fixed");
 
     // Инициализация сцен
-    Scene testScene1; testScene1.SetSurfaces(platforms2);
-    Scene testScene;  testScene.SetSurfaces(platforms1);
-    SceneManager sceneManager(testScene);
+    Scene testScene1; testScene1.SetSurfaces(testScene1Platforms);
+    Scene testScene;  testScene.SetSurfaces(testScene2Platforms);
+    SceneManager sceneManager(testScene1);
 
     Rectangle player = { 400, 300, 40, 40 };
     float velocityY = 0.0f;
@@ -56,10 +57,11 @@ int main() {
 
         // 3. Обработка коллизий (теперь корректно с deltaTime)
         bool onGround = false;
-        for (const auto& plat : sceneManager.GetCurrentScene().GetSurfaces()) {
-            if (CheckCollisionRecs(player, plat)) {
-                if (velocityY > 0) { // Падаем сверху
-                    player.y = plat.y - player.height;
+        for (const auto& entity : sceneManager.GetCurrentScene().GetSurfaces()) {
+            // ВАЖНО: вызываем GetCollisionBox()
+            if (CheckCollisionRecs(player, entity.GetCollisionBox())) {
+                if (velocityY > 0) {
+                    player.y = entity.GetCollisionBox().y - player.height;
                     velocityY = 0;
                     onGround = true;
                 }
@@ -84,7 +86,7 @@ int main() {
                 sceneManager.Draw();
                 DrawRectangleRec(player, RED);
             EndMode2D();
-            DrawText("A/D - движение, Пробел - прыжок", 10, 10, 20, DARKGRAY);
+            DrawText("A/D - move, Space - jump", 10, 10, 20, DARKGRAY);
         EndDrawing();
     }
     CloseWindow();

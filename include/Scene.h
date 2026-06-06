@@ -3,14 +3,17 @@
 #include <raylib.h>
 #include <vector>
 
+#include "Entity.h"
+
 
 class Scene {
-    std::vector<Rectangle> surfaces;
+    std::vector<Entity> surfaces;
+    std::vector<Entity> entities;
 
 public:
     void DrawScene();
-    void SetSurfaces(std::vector<Rectangle>& surfaces);
-    std::vector<Rectangle> GetSurfaces();
+    void SetSurfaces(std::vector<Entity>& surfaces);
+    std::vector<Entity> GetSurfaces();
 };
 
 
