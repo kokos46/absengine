@@ -1,5 +1,4 @@
 #include "include/Player.h"
-
 #include "include/SceneManager.h"
 
 Player::Player(Rectangle collision, float moveSpeed, float jumpForce, float gravity): Entity(collision), moveSpeed(moveSpeed), jumpForce(jumpForce), gravity(gravity) {}

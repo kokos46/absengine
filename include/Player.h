@@ -5,7 +5,8 @@
 #ifndef ABSENGINE_PLAYER_H
 #define ABSENGINE_PLAYER_H
 #include "Entity.h"
-#include "SceneManager.h"
+
+class SceneManager;
 
 
 class Player : public Entity {

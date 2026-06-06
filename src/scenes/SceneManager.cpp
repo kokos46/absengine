@@ -1,13 +1,13 @@
-#include <utility>
-
 #include "../../include/SceneManager.h"
+#include "include/Player.h"
 
-SceneManager::SceneManager(Scene startScene) {
-    this->currentScene = std::move(startScene);
+SceneManager::SceneManager(const Scene& startScene) : currentScene(startScene) {
+
 }
 
-void SceneManager::changeScene(Scene newScene) {
+void SceneManager::changeScene(Scene newScene, Player& player) {
     this->currentScene = newScene;
+    player.SetPosition(newScene.GetPlayerPos());
     newScene.DrawScene();
 }
 

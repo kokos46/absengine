@@ -1,16 +1,15 @@
 #ifndef ABSENGINE_SCENEMANAGER_H
 #define ABSENGINE_SCENEMANAGER_H
-#include <memory>
-
 #include "Scene.h"
 
+class Player;
 
 class SceneManager {
     Scene currentScene;
 public:
-    SceneManager(Scene startScene);
+    SceneManager(const Scene& startScene);
 
-    void changeScene(Scene newScene);
+    void changeScene(Scene newScene, Player& player);
     void Draw();
     Scene GetCurrentScene();
 

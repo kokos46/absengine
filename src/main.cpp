@@ -22,9 +22,9 @@ int main() {
     InitWindow(screenWidth, screenHeight, "Raylib Platformer - Finalized");
 
     // Инициализация сцен
-    Scene testScene1; testScene1.SetSurfaces(testScene1Platforms);
-    Scene testScene;  testScene.SetSurfaces(testScene2Platforms);
-    SceneManager sceneManager(testScene1);
+    Scene testScene1(400, 300); testScene1.SetSurfaces(testScene1Platforms);
+    Scene testScene(600, 300);  testScene.SetSurfaces(testScene2Platforms);
+    SceneManager sceneManager(testScene);
 
     // Создаем игрока (используем Rectangle для начальной позиции)
 
@@ -33,7 +33,8 @@ int main() {
     const float jumpForce = 600.0f;
     const float gravity = 1800.0f;
 
-    Player testPlayer(Rectangle{ 400, 300, 40, 40 }, moveSpeed, jumpForce, gravity);
+    Player testPlayer(Rectangle{ sceneManager.GetCurrentScene().GetPlayerPos().x,
+                                 sceneManager.GetCurrentScene().GetPlayerPos().y, 40, 40 }, moveSpeed, jumpForce, gravity);
     float velocityY = 0.0f;
 
     Camera2D camera = { 0 };
@@ -47,8 +48,9 @@ int main() {
 
         testPlayer.Movement(sceneManager, GetFrameTime());
         // Переключение сцен
-        if (IsKeyPressed(KEY_ONE)) sceneManager.changeScene(testScene1);
-        if (IsKeyPressed(KEY_TWO)) sceneManager.changeScene(testScene);
+        if (IsKeyPressed(KEY_ONE)) sceneManager.changeScene(testScene1, testPlayer);
+        if (IsKeyPressed(KEY_TWO)) sceneManager.changeScene(testScene, testPlayer);
+        // testPlayer.SetPosition(sceneManager.GetCurrentScene().GetPlayerPos());
 
         // Плавная камера (следим за игроком)
         camera.target.x += (testPlayer.GetPosition().x - camera.target.x) * 0.1f;
@@ -57,9 +59,8 @@ int main() {
         BeginDrawing();
             ClearBackground(RAYWHITE);
             BeginMode2D(camera);
-                sceneManager.Draw();
-                // Рисуем хитбокс игрока
-                DrawRectangleRec(testPlayer.GetCollisionBox(), RED);
+                sceneManager.Draw(); // отрисовка сцен
+                testPlayer.Draw(); // отрисовка игрока
             EndMode2D();
 
             DrawText("A/D - move, Space - jump | 1,2 - switch scene", 10, 10, 20, DARKGRAY);

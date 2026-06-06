@@ -5,6 +5,9 @@ void Scene::DrawScene() {
     }
 }
 
+Scene::Scene(float x, float y) {
+    playerPos = Vector2(x, y);
+}
 
 void Scene::SetSurfaces(std::vector<Entity> &surfaces) {
     this->surfaces = surfaces;
@@ -13,3 +16,8 @@ void Scene::SetSurfaces(std::vector<Entity> &surfaces) {
 std::vector<Entity> Scene::GetSurfaces() {
     return this->surfaces;
 }
+
+Vector2 Scene::GetPlayerPos() {
+    return playerPos;
+}
+
