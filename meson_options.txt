@@ -1,0 +1,4 @@
+option('level_editor',
+       type : 'feature',
+       value : 'auto',
+       description : 'Build the Qt level editor')

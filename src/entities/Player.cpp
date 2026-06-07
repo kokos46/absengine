@@ -1,16 +1,45 @@
 #include "include/Player.h"
+
+#include "include/Animator.h"
 #include "include/SceneManager.h"
 
-Player::Player(Rectangle collision, float moveSpeed, float jumpForce, float gravity): Entity(collision), moveSpeed(moveSpeed), jumpForce(jumpForce), gravity(gravity) {}
+Player::Player(Rectangle collision, float moveSpeed, float jumpForce, float gravity): Entity(collision), moveSpeed(moveSpeed),
+    jumpForce(jumpForce), gravity(gravity), runAnimator("npc01_spritesheet.png", 8, 6, 0, 8, 0.1f),
+    idleAnimator("npc01_spritesheet.png", 8, 6, 2, 8, 0.0f)
+{
+    currentAnimator = &idleAnimator;
+}
 
 void Player::ResetVelocity() {
     velocityY = 0.0f;
 }
 
+void Player::UnloadAnimations() {
+    runAnimator.Unload();
+    idleAnimator.Unload();
+}
+
+void Player::SetAnimation(AnimationState state) {
+    if (currentAnimationState == state) {
+        return;
+    }
+
+    currentAnimationState = state;
+    currentAnimator = state == AnimationState::Run ? &runAnimator : &idleAnimator;
+    currentAnimator->Reset();
+}
+
 void Player::Movement(SceneManager& sceneManager, float dt) {
     // 1. Управление (X)
     // Используем тернарный оператор для чистоты: 1 если D, -1 если A, 0 если ничего
-    float moveX = (IsKeyDown(KEY_D) - IsKeyDown(KEY_A)) * moveSpeed * dt;
+    int inputAxis = IsKeyDown(KEY_D) - IsKeyDown(KEY_A);
+    float moveX = inputAxis * moveSpeed * dt;
+
+    if (inputAxis < 0) {
+        facingLeft = true;
+    } else if (inputAxis > 0) {
+        facingLeft = false;
+    }
 
     // 2. Гравитация (Y)
     velocityY += gravity * dt;
@@ -52,7 +81,24 @@ void Player::Movement(SceneManager& sceneManager, float dt) {
     // 7. Прыжок (только если стоим на твердом объекте)
     if (onGround && IsKeyPressed(KEY_SPACE)) {
         velocityY = -jumpForce;
+        onGround = false;
     }
 
+    if (!onGround && velocityY < 0.0f) {
+        SetAnimation(AnimationState::Jump);
+    } else if (!onGround && velocityY > 0.0f) {
+        SetAnimation(AnimationState::Fall);
+    } else if (inputAxis != 0) {
+        SetAnimation(AnimationState::Run);
+    } else {
+        SetAnimation(AnimationState::Idle);
+    }
+
+    currentAnimator->Update(dt);
+
     sceneManager.ApplyPendingSceneChange(*this);
+}
+
+void Player::Draw() {
+    currentAnimator->Draw(GetCollisionBox(), facingLeft);
 }

@@ -4,6 +4,28 @@
 #include "include/SceneManager.h"
 #include "include/Player.h"
 
+bool isFullscreen = false; // Состояние полноэкранного режима
+
+void ToggleFullscreenMode() {
+    isFullscreen = !isFullscreen;
+
+    if (isFullscreen) {
+        // 1. Убираем рамки
+        SetWindowState(FLAG_WINDOW_UNDECORATED);
+        // 2. Растягиваем на весь экран
+        int monitor = GetCurrentMonitor();
+        SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+        SetWindowPosition(0, 0);
+    } else {
+        // 1. Возвращаем рамки
+        ClearWindowState(FLAG_WINDOW_UNDECORATED);
+        // 2. Устанавливаем исходный размер (например, 1366x768)
+        SetWindowSize(1366, 768);
+        // 3. Можно отцентрировать окно
+        SetWindowPosition(100, 100);
+    }
+}
+
 // Данные сцен
 std::vector testScene1Platforms = {
     Entity({ 0, 400, 800, 50 }),
@@ -17,7 +39,7 @@ std::vector testScene2Platforms = {
     Entity({ 200, 300, 200, 20 })
 };
 
-constexpr float moveSpeed = 400.0f;
+constexpr float moveSpeed = 300.0f;
 constexpr float jumpForce = 600.0f;
 constexpr float gravity = 1800.0f;
 
@@ -55,7 +77,7 @@ int main() {
     Camera2D camera = {};
     camera.target = { 400, 300 };
     camera.offset = { screenWidth / 2.0f, screenHeight / 2.0f };
-    camera.zoom = 1.0f;
+    camera.zoom = 2.0f;
 
     SetTargetFPS(60);
 
@@ -68,6 +90,9 @@ int main() {
         if (IsKeyPressed(KEY_F3)) {
             debugDrawTriggers = !debugDrawTriggers;
             sceneManager.SetDebugDrawTriggers(debugDrawTriggers);
+        }
+        if (IsKeyPressed(KEY_F4)) {
+            ToggleFullscreen();
         }
 
         // Плавная камера (следим за игроком)
@@ -84,6 +109,8 @@ int main() {
             DrawText("A/D - move, Space - jump | 1,2 - switch scene | F3 - debug triggers", 10, 10, 20, DARKGRAY);
         EndDrawing();
     }
+
+    testPlayer.UnloadAnimations();
     CloseWindow();
     return 0;
 }
